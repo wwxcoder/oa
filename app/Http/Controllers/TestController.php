@@ -11,6 +11,7 @@ class TestController extends Controller
 	
 	public function index(Request $request)
 	{
+		return $request->id11;
 		if(!session("name")){
 			return view("Public.login");
 		}else{

@@ -6,7 +6,7 @@ use App\Demo;
 //     return view('welcome');
 // });
 
-Route::get('/', 'TestController@index') ;
+Route::get('/{id}', 'TestController@index') ;
 // Route::get('/Test', 'TestController@test1') ;
 // Route::get('/', 'DemoController@test') ;
 
