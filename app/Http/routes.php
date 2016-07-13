@@ -1,12 +1,10 @@
 <?php
-
-
 use App\Demo;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Route::get('/{id}', 'TestController@index') ;
+Route::get('/', 'TestController@index') ;
 // Route::get('/Test', 'TestController@test1') ;
 // Route::get('/', 'DemoController@test') ;
 
@@ -37,14 +35,6 @@ Route::get('/{id}', 'TestController@index') ;
 Route::get('user1/{id}', function ($id) {
     return 'User '.$id;
 });
-
-
-Route::get('test12', function () {
-    return Demo::all();
-});
-
-
-
 
 // Route::any('test', function () {
 // 	// return Request::input('user').md5(Request::input('pass'));
@@ -81,13 +71,12 @@ Route::get('reg', function () {
 });
 
 
-Route::any('login', 'Common\LoginController@login'); 
-Route::any('reg_sent', 'Common\LoginController@reg');
-Route::any('login_form', 'Common\LoginController@login_form'); //用户登录
 
 
-// URL::action('HomeController@index');
-
-Route::group(['middleware' => ['web']], function () {
-    //
+// 用户登录注册模块
+Route::group(['namespace' => 'Common'], function(){
+	Route::any('login', 'LoginController@login'); 
+	Route::any('reg_sent', 'LoginController@reg');
+	Route::any('login_form', 'LoginController@login_form'); //用户登录
 });
+

@@ -30,9 +30,12 @@ public function login_form(Request $request){
 	//   $value = $request->session()->get('username');
 	// 	   echo $value;
 	// exit;
+ return  $request->session()->get('username');
+
 		$username= $request->username;
 		$pass= $request->strPassword;
-		$pass=Hash::make($pass);
+		$pass=md5("oa_cd".$pass);
+
 
 		dump($username);
 		dump($pass);
@@ -43,7 +46,7 @@ public function login_form(Request $request){
 
 		$username= $request->username;
 		$pass= $request->pass;
-		$pass=Hash::make($pass);
+		$pass=md5("oa_cd".$pass);
 
 
  // $users = DB::select('select * from oa_admin where strAdminName = ?', [$username,$pass]);
@@ -62,14 +65,14 @@ public function login_form(Request $request){
 	public function reg(Request $request){
 		$username= $request->username;
 		$pass= $request->pass;
-		// var_dump($username);
-		// var_dump($pass);
+		$pass=md5("oa_cd".$pass);
 
 		if(empty($pass)||empty($username)){
 			return "用户名和密码不能为空";
 			exit;
-		}
-		$pass=Hash::make($pass);
+		}	
+
+		$pass=md5("oa_cd".$pass);
 		$tAddTime=date("Y-m-d H:i:s",time());
 		$tUpdateTime=date("Y-m-d H:i:s",time());
 		 $users = DB::select('select * from oa_admin where strAdminName = ?', [$username]);
@@ -80,7 +83,7 @@ public function login_form(Request $request){
 			// $user1 = DB::select('select * from oa_admin where strAdminName >= '.$name." ");
 				 $res=  DB::insert('insert into oa_admin (strAdminName,strPassword,tAddTime,tUpdateTime) values (?,?,?,?)',[$username,$pass,$tAddTime,$tUpdateTime]);  //成功返回1
 				 Session::put('username', $username);  
-				 echo $res;
+				 echo $username."用户注册成功";
 				return redirect('login');
 
 				 // return $res;
