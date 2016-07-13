@@ -1,0 +1,359 @@
+修改系统的鼠标双击文件打开变成单击
+此电脑->查看->选项->更改文件选项和搜索选项->通过双击打开项目
+
+路由
+
+http://localhost/lar/public/  url
+
+对应的路径:app/Http/route.php
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/', 'WelcomeController@index') ;
+Route::get('/', 'DemoController@test') ;
+
+
+// Route::get("get",function(){
+// 	return "get请求";
+// });
+
+// Route::post("post",function(){
+// 	return "post请求";
+// });
+// Route::any("any",function(){
+// 	return "any请求,不敏感";
+// });
+
+对应的控制器WelcomeController
+
+namespace App\Http\Controllers;
+
+class WelcomeController extends Controller {
+public function index(){
+		return view("welcome");
+		//return ("welcome");
+		//return "welcome";
+	}
+
+	public function __construct(){
+		$this->middleware("guest");
+	}	
+}
+	
+php laravel自动创建和手动创建控制器
+自动创建:使用artisan
+
+
+
+class UserController extends Controller {
+	public function index(){
+		return __FUNCTION__;
+	}
+
+	public function create(){
+		return __FUNCTION__;
+	}
+	public function show(){
+		return __FUNCTION__;
+	}
+
+	public function edit(){
+		return __FUNCTION__;
+	}
+}
+
+
+restful资源控制器
+
+
+视图默认blade类文件
+
+单个数据
+return view("Public/demo")->with("name","后台传递数据")
+一维数组
+		$data=[
+		'name'=>'zhangsan',
+		'age'=>20
+		];
+		$data=(
+		'name'=>'zhangsan',
+		'age'=>20
+		);
+		return view("Public/demo",$data);
+
+compact函数传递
+	$name="lala";
+		return view("Public/demo",compact('name'));
+
+$name="lal111a";
+		return view("Public/demo",compact('name'));
+		return view("Public/demo")->with('name',"zhangsan");
+
+blade模板引擎模板动态数据获取
+{{$name}}
+{{$name or '默认值'}}
+
+
+标签{!! !!}  会自动解析,不介意
+{!! '<script>("你好blade")</script>' !!}
+不解析 会当成字符串数据
+@{{aa}}  
+
+
+{{{}}}  :表示转义html标签
+{{{'<b>转译html标签</b>'}}}
+
+{{csrf_token()}}
+
+
+
+@if($name)
+	你的名字:{{$name}}
+@else
+	你的名字:{{$name }}
+@endif
+
+@foreach($people as $person)
+<li>
+	{{$person}}
+</li>
+@endforeach
+
+
+子视图:公共部分
+Route::get('{number}',function($number){
+	return view("home".$number);
+});
+
+@include('Public.head')
+
+访问地址:http://localhost/lar/public/number1
+
+
+数据库操作
+protected $hidden=['age'];
+protected $guarded=['user_id'];//唯一
+protected $fillable=['user_id'];
+
+protected $table='tb_user';
+protected $primaryKey='user_id';  //定义id主键
+
+all()
+find();
+findOrFail()  没有找到数据就报错
+
+
+入口操作
+$user=new App\User();
+$user->all();  
+
+控制器操作
+$user->find(2);
+$user->where('user',"haha")->get();
+$user->where('id','>','2')->get();  //大于2
+
+
+添加数据
+public function userAdd(){
+	$this->username='zhangsan';
+	$this->age='40';
+	$this->save();
+}
+
+
+public $timestamps=false;
+
+grant all on *.* to root@192.168.188.177 identified by 'root';
+
+flush privileges; 
+
+
+
+eloquent 
+
+
+
+$arr=['one','two','three'];
+$col=collect($arr);
+$r=col->has("ten");
+$r=col->task(2);
+return $r ?"有 ":"没有";
+
+
+dd()
+$user->toJson();
+$user->toArray();
+
+
+
+
+获取url传递数据
+return Request::input('name');
+return Request::all();
+return Request::query("user");
+return Request::query("user1","默认值");
+
+return Request::has("user1");
+return Request::exists("user1");
+过滤显示
+return Request::only("user,age");  
+return Request::except("user,age");  
+
+url和fullurl
+return Request::url();  
+return Request::fullurl();  
+
+
+请求历史
+flash()
+old()
+
+return Request::flash();  
+return Request::flashOnly();  
+return Request::flashExcept();  
+
+return Request::old();  返回上一页
+
+
+file()->getSize()
+hasFile()
+getSize()
+
+getClientOrigrinalName()
+getClientOrigrinalExtension()
+如何要上传多个表单的话，需要给表单的file  添加multiple或者 name添加[]
+
+
+session
+
+put
+all
+get
+has
+forget 删除session
+pull  拿出来并且删除  使用场景在表单
+
+
+dd(Session::all())
+Session::put("username","zhangsan");
+Session::get("username");
+
+session(["username"=>"zhangsan"]);  另一种存储session方法
+
+配置：文件，数据库
+、
+
+select * from sessions
+
+
+修改配置文件env
+SESSION_DRIVER=databases
+SESSION_DRIVER=file
+
+基础用法
+
+ 验证机制；
+
+
+
+
+创建一个新的控制器
+
+unique:users  表示users  唯一性
+
+use Request ,Validator ;
+
+$rq=Request::all();
+$validator=Validator::make($rq,[
+	'username'=>'required|min:20|between:4,20|unique:users',
+	'phone'=>'numeric|required',
+]);
+if($validator->fails()){
+	return $validator->error;
+}
+echo '验证成功！';
+return $rq;
+
+表单请求验证
+
+哈希
+make ：加密
+ check：检查
+
+ $pass=Hash:make($password);
+session(['pass'=>$pass]);
+return session('pass');
+
+
+
+ $res=Hash:check($password1,$passowrd2);
+
+ 帮助方法
+ array
+ head
+
+ $arr=[1,2,3];
+ return head($arr)// 返回1
+
+ $arr=[
+ 'name'=>"zhangsan",
+ 'age'=>10,
+ 'class'=>2
+ ];
+ arrar_only($arr,['name','age']);
+
+ array_first($arr,function($key,$value){
+ return $value>20;
+ })
+
+ array_add
+ array_except
+ array_flatten  只打印value  不输出key
+ array_where
+ last
+
+
+ $arr=[
+ 'name'=>'bob',
+ 'age'=>'20',
+ 'class'=>"23"
+ ];
+ return array_where($arr,function($k,$v){
+ return is_string($v);
+ })
+
+ path帮助函数
+
+ app_path  应用路径  中文会乱码
+ config_path  
+ storage_path  
+ public_path  
+
+
+string函数
+
+str_plural  
+starts_with
+ends_with  
+camel_case  转化为驼峰命名
+
+class_basename
+str_limit("abcd",3);  多余省略号
+str_is("ab*","abcd")  是否已ab开头
+
+
+模型  需要注意路径
+namespace App;
+use Illuminate\Database\Eloquent\Model;
+class Member extends Model{
+	protected $table='member';
+	protected $primaryKey='id';
+	protected $timestamps='false';
+}
+
+
+use App\Member;
+
+return Member::all();
